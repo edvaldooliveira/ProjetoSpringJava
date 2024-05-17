@@ -12,7 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-//Controlador e rota
+
 @RestController
 @RequestMapping(value = "/products")
 public class ProductController {
@@ -27,14 +27,14 @@ public class ProductController {
        return ResponseEntity.ok(dto);
     }
 
-    //Método
+
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> findALL(Pageable pageable){
        Page<ProductDTO> dto = service.findALL(pageable);
        return ResponseEntity.ok(dto);
     }
 
-    //Vai receber a requisiçao que bem do formulario
+
     @PostMapping
     public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto){
         dto = service.insert(dto);
@@ -43,12 +43,19 @@ public class ProductController {
         return ResponseEntity.created(uri).body(dto);
     }
 
-    //Atualizar dados
+
     @PutMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO dto){
 
          dto = service.uppdate(id, dto);
         return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id){
+
+         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
