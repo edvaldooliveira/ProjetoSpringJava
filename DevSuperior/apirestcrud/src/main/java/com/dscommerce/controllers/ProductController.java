@@ -5,8 +5,11 @@ import com.dscommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 //Controlador e rota
@@ -18,22 +21,26 @@ public class ProductController {
     private ProductService service;
 
     @GetMapping(value = "/{id}")
-    public ProductDTO findById(@PathVariable Long id){
+    public ResponseEntity<ProductDTO> findById(@PathVariable Long id){
 
-      return service.findById(id);
+        ProductDTO dto = service.findById(id);
+       return ResponseEntity.ok(dto);
     }
 
     //Método
     @GetMapping
-    public Page<ProductDTO> findALL(Pageable pageable){
-        return service.findALL(pageable);
+    public ResponseEntity<Page<ProductDTO>> findALL(Pageable pageable){
+       Page<ProductDTO> dto = service.findALL(pageable);
+       return ResponseEntity.ok(dto);
     }
 
     //Vai receber a requisiçao que bem do formulario
     @PostMapping
-    public  ProductDTO insert(@RequestBody ProductDTO dto){
-        return service.insert(dto);
-
+    public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto){
+        dto = service.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
 }
